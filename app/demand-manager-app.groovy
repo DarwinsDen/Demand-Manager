@@ -60,7 +60,7 @@ def warning() {
 }
 
 definition(
-    name: "Demand Manager Alpha", namespace: "darwinsden", author: "eedwards", description: "Electric Energy Demand Management.",
+    name: "Demand Manager", namespace: "darwinsden", author: "eedwards", description: "Electric Energy Demand Management.",
     category: "My Apps", iconUrl: "https://rawgit.com/DarwinsDen/SmartThingsPublic/master/resources/icons/meterColor.png",
     iconX2Url: "https://rawgit.com/DarwinsDen/SmartThingsPublic/master/resources/icons/meterColor.png"
 )
