@@ -2,34 +2,32 @@
   "packageName": "Demand Manager",
   "author": "darwinsden (Eric Edwards)",
   "minimumHEVersion": "2.0.0",
-  "dateReleased": "2022-01-21",
-  "releaseNotes": "Initial Hubitat Package Manager Release",
-  "documentationLink": "https://darwinsden.com/demand/",
+  "dateReleased": "2022-01-20",
   "apps": [
     {
-      "id": "9683e3b2-f9a2-4889-81c8-a9f8ac887d4f",
+      "id": "efdebd9f-19d9-4357-a126-a649bb2a531a",
       "name": "Demand Manager",
       "namespace": "darwinsden",
+      "location": "https://raw.githubusercontent.com/DarwinsDen/Demand-Manager/main/app/demand-manager-app.groovy",
       "alternateNames" : [
-				{
-					"name": "Demand Manager Alpha",
-					"namespace": "darwinsden"
-				}
-			],
-      "location": "https://raw.githubusercontent.com/DarwinsDen/Tesla-Powerwall-Manager/main/app/tesla-powerwall-manager-app.groovy",
+	 {
+            "name": "Demand Manager Alpha",
+	    "namespace": "darwinsden"
+	 }
+      ],
       "required": true,
       "oauth": false,
-      "version": "0.3.44"
+      "version": "0.3.40"
     }
   ],
   "drivers": [
     {
-      "id": "fd23cd04-24ec-481e-9092-c0063fe6558c",
-      "name": "Tesla Powerwall",
+      "id": "ef21d307-8549-4262-852f-f1104e614df7",
+      "name": "Demand Manager Dashboard",
       "namespace": "darwinsden",
-      "location": "https://raw.githubusercontent.com/DarwinsDen/Tesla-Powerwall-Manager/main/device/tesla-powerwall-device.groovy",
+      "location": "https://raw.githubusercontent.com/DarwinsDen/Demand-Manager/main/device/demand-manager-dashboard-device.groovy",
       "required": true,
-      "version": "0.2.20"
+      "version": "0.3.40"
     }
   ]
 }
