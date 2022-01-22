@@ -2,11 +2,11 @@
  *  Demand Manager
  *
  *  Author: eric@darwinsden.com
- *  Copyright 2018, 2019, 2020, 2021 - All rights reserved
+ *  Copyright 2018-2022 - All rights reserved
  *
  *  For questions, more information, or to provide feedback on this smart app, please visit: 
  *
- *    darwinsden.com/demand/
+ *   darwinsden.com/demand/
  *  
  *  ****** WARNING ******
  *  Installation and configuration of this software will grant this application control of your home thermostat and other devices. 
@@ -33,10 +33,11 @@
  */
 
 def version() {
-    return "v0.3.30.20210620"
+    return "v0.3.40.20220120"
 }
 
 /*   
+*	20-Jan-2022 >>> v0.3.40.20220120 - Initial Hubitat Package Manager release.
  *	17-Jun-2021 >>> v0.3.30.20210620 - UI updates.
  *	27-May-2020 >>> v0.3.2e.20200527 - Additional Hubitat compatibility updates.
  *	10-Jan-2020 >>> v0.3.1e.20200111 - Initial basic cross-platform support for Hubitat.
@@ -298,7 +299,7 @@ def pageEnergyConsumers() {
             input "wholeHomePowerMeter", "capability.powerMeter", required: false, title: "Home Power Meter", image: "https://rawgit.com/DarwinsDen/SmartThingsPublic/master/resources/icons/energyMeter.png"
         }
         String msg = "Projected demand estimates are important for determining if your current usage trends are likely to exceed your demand goals during a 30/60 minute demand period." +
-            " Monitoring major energy consumers such as your air conditioning thermostat and entering in nominal home usage helps to refine these projections."
+            " Monitoring major energy consumers such as your air conditioner (via your thermostat) and entering in nominal home usage helps to refine these projections."
         section (msg) {
             String status = nominalDataStatus()
             Boolean complete = status != null
@@ -686,7 +687,7 @@ def pageAdvancedThermostatCommandSettings() {
             input "thermoHysteresisBumpF", "number", required: false, defaultValue: 2, title: "Thermostat hysteresis bump in Fahrenheit (default 2)"
             input "thermoHysteresisBumpSeconds", "number", required: false, defaultValue: 15, title: "Thermostat hysteresis bump return time in seconds (default 15)"
         }
-        section("Return the thermostat back to pre-defined temperature setpoint after completing each (30 or 60 minute) cycle. Note: This will likely cause issues if TRS is enabled. " +
+        section("Return the thermostat back to pre-defined temperature setpoint after completing each (30 or 60 minute) cycle if the Demand Manager modified the thermostat setpoint during that period. Note: This will likely cause issues if TRS is enabled. " +
             "This may also result in inefficient and frequent air conditioner cycles with typical environments. It is recommended that this option is only used when demand goal " +
             "overage conditions are rarely expected, such as in mild/temperate environments or when supplemental home generators or batteries (eg PowerWalls) are being utilized") {
             input "returnSetPointAfterCycle", "bool", required: false, defaultValue: false, title: "Return temperature after each cycle"
@@ -2266,12 +2267,12 @@ void logger (String message, String msgLevel="debug") {
 
 def hrefMenuPage (String page, String titleStr, String descStr, String image, params, state = null) {
     if (hubIsSt()) {
-        href page, title: titleStr, description: descStr, required: false, image: image
+        href page, title: titleStr, description: descStr, required: false, image: image, params: params, state: state
     } else {
         String imgFloat = ""
         String imgElement = ""
         if (descStr) {imgFloat = "float: left;"} //Center title} if no description
-        if (image) {imgElement = "<img src='${image}' width='40' style='${imgFloat} width: 40px; padding: 0 16px 0 0'>"}
+        if (image) {imgElement = "<img src='${image}' width='36' style='${imgFloat} width: 36px; padding: 0 16px 0 0'>"}
         String titleDiv = imgElement + titleStr
         String descDiv = "<div style='float :left; width: 90%'>" + descStr + "</div>"
         href page, description: descDiv, title: titleDiv, required: false, params : params, state : state
@@ -2299,8 +2300,8 @@ def hrefMenuPage (String page, String titleStr, String descStr, String image, pa
 @Field static final String solarIcon = "https://rawgit.com/DarwinsDen/SmartThingsPublic/master/resources/icons/solar.png"
 @Field static final String eMeterIcon = "https://rawgit.com/DarwinsDen/SmartThingsPublic/master/resources/icons/energyMeter.png"
 @Field static final String schedIncomplIcon = "https://rawgit.com/DarwinsDen/SmartThingsPublic/master/resources/icons/schedIncompl40.png"
-@Field static final String ddLogoHubitat = "https://darwinsden.com/download/ddlogo-for-hubitat-demandManagerV3-png"
-@Field static final String ddLogoSt = "https://darwinsden.com/download/ddlogo-for-st-demandManagerV3-png"
+@Field static final String ddLogoHubitat = "https://darwinsden.com/download/ddlogo-for-hubitat-demandManagerv3-png"
+@Field static final String ddLogoSt = "https://darwinsden.com/download/ddlogo-for-st-demandManagerv3-png"
 @Field static final String ppBtn = "https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif"
 @Field static final String activityIcon = "http://cdn.device-icons.smartthings.com/secondary/activity@2x.png"
 @Field static final String demandIcon = "https://rawgit.com/DarwinsDen/SmartThingsPublic/master/resources/icons/meterColor100.png"
