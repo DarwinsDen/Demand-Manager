@@ -8,7 +8,7 @@
       "id": "efdebd9f-19d9-4357-a126-a649bb2a531a",
       "name": "Demand Manager",
       "namespace": "darwinsden",
-      "location": "https://raw.githubusercontent.com/DarwinsDen/Demand-Manager/main/app/demand-manager-app.groovy",
+      "location": "https://raw.githubusercontent.com/DarwinsDen/Demand-Manager/master/smartapps/darwinsden/demand-manager-alpha.src/demand-manager-alpha.groovy",
       "alternateNames" : [
 	 {
             "name": "Demand Manager Alpha",
