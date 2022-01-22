@@ -25,7 +25,7 @@
       "id": "ef21d307-8549-4262-852f-f1104e614df7",
       "name": "Demand Manager Dashboard",
       "namespace": "darwinsden",
-      "location": "https://raw.githubusercontent.com/DarwinsDen/Demand-Manager/main/device/demand-manager-dashboard-device.groovy",
+      "location": "https://raw.githubusercontent.com/DarwinsDen/Demand-Manager/master/devicetypes/darwinsden/demand-manager-dashboard.src/demand-manager-dashboard.groovy",
       "required": true,
       "version": "0.3.40"
     }
