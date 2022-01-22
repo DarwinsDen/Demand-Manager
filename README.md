@@ -1,6 +1,6 @@
 # <img width="44" src ='https://user-images.githubusercontent.com/17802474/150605391-12721037-2a88-4c06-bf95-f515e9ec721d.png' align='left' style = 'padding-right: 15px'>Demand Manager
 
-Universal Hubitat and SmartThings app designed for those wishing to save money on their electric bill with utility companies that levy demand charges.
+A universal Hubitat and SmartThings app designed for those wishing to save money on their electric bill with utility companies that levy demand charges.
 
 Monitor your home’s electric usage and calculate current and projected demand usage for 30 or 60-minute demand cycles. Receive notifications and automatically control your thermostat and other devices in order to reduce peak demand costs.
 
