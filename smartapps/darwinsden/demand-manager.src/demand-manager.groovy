@@ -33,11 +33,11 @@
  */
 
 def version() {
-    return "v0.3.40.20220120"
+    return "v0.3.40.20220122"
 }
 
 /*   
-*	20-Jan-2022 >>> v0.3.40.20220120 - Initial Hubitat Package Manager release.
+ *	20-Jan-2022 >>> v0.3.40.20220122 - Initial Hubitat Package Manager release.
  *	17-Jun-2021 >>> v0.3.30.20210620 - UI updates.
  *	27-May-2020 >>> v0.3.2e.20200527 - Additional Hubitat compatibility updates.
  *	10-Jan-2020 >>> v0.3.1e.20200111 - Initial basic cross-platform support for Hubitat.
@@ -777,6 +777,21 @@ Integer secondssBetweenThermostatCommands() {
     return settings.minMinutesBetweenThermostatCommands ? settings.minMinutesBetweenThermostatCommands.toInteger() * 60 : 180
 }
 
+void addChildPowerMeter (String name, String label) {
+    if (getChildDevice(name) == null) {
+        log.debug "adding child power meter: " + name
+        if (hubIsSt()) {
+            def child = addChildDevice("darwinsden", "Demand Manager Virtual Energy Meter", name, null, 
+                     [name: name, label: label, completedSetup: true])
+            } else {
+                //Use Hubitat's built in component power meter
+                def child = addChildDevice("hubitat", "Generic Component Power Meter", name, null, [name: name, 
+                   label: label, completedSetup: true])
+                child.updateSetting("txtEnable",[value:false, type:"bool"]) //turn of logging on child device
+            }
+        }
+}
+
 def initialize() {
     logger ("initializing Demand Manager","debug")
    
@@ -789,22 +804,10 @@ def initialize() {
         }
     }
     if (installVirtualDemandMeters?.toBoolean()) {
-        if (getChildDevice("demandPeakCurrent") == null) {
-            log.debug "adding current peak meter"
-            def child = addChildDevice("darwinsden", "Demand Manager Virtual Energy Meter", "demandPeakCurrent", null, [name: "demandPeakCurrent", label: "Demand-Current", completedSetup: true])
-        }
-        if (getChildDevice("demandPeakProjected") == null) {
-            log.debug "adding projected peak meter"
-            def child = addChildDevice("darwinsden", "Demand Manager Virtual Energy Meter", "demandPeakProjected", null, [name: "demandPeakProjected", label: "Demand-Projected", completedSetup: true])
-        }
-        if (getChildDevice("demandPeakToday") == null) {
-            log.debug "adding today peak meter"
-            def child = addChildDevice("darwinsden", "Demand Manager Virtual Energy Meter", "demandPeakToday", null, [name: "demandPeakToday", label: "Demand-Peak Today", completedSetup: true])
-        }
-        if (getChildDevice("demandPeakMonth") == null) {
-            log.debug "adding month peak meter"
-            def child = addChildDevice("darwinsden", "Demand Manager Virtual Energy Meter", "demandPeakMonth", null, [name: "demandPeakMonth", label: "Demand-Peak This Month", completedSetup: true])
-        }
+        addChildPowerMeter ("demandPeakCurrent", "Demand-Current") 
+        addChildPowerMeter ("demandPeakProjected", "Demand-Projected") 
+        addChildPowerMeter ("demandPeakToday", "Demand-Peak Today") 
+        addChildPowerMeter ("demandPeakMonth", "Demand-Peak This Month")
     }
     def dashboardDevice = getChildDevice(dashboardDeviceId())
     if (dashboardDevice) {
@@ -1392,7 +1395,12 @@ def recordFinalCyclePeaks () {
                 dashboardDevice.setPeakDayDemand(peakDemand)
                 def demandPeakToday = getChildDevice("demandPeakToday")
                 if (demandPeakToday) {
-                    demandPeakToday.setPower(peakDemand)
+                    demandPeakToday.setPower(peakDemand)                  
+                    if (hubIsSt()) {
+                        demandPeakToday.setPower(peakDemand)
+                    } else {
+                        demandPeakToday.parse([[name:"power", value:peakDemand]])
+                    }  
                 }
             }
             def peakDemandThisMonth = dashboardDevice.currentValue("peakMonthDemand")
@@ -1401,7 +1409,11 @@ def recordFinalCyclePeaks () {
                  dashboardDevice.setPeakMonthDemand(peakDemand)
                  def demandPeakThisMonth = getChildDevice("demandPeakMonth")
                  if (demandPeakThisMonth) {
-                     demandPeakThisMonth.setPower(peakDemand)
+                     if (hubIsSt()) {
+                        demandPeakThisMonth.setPower(peakDemand)
+                     } else {
+                        demandPeakThisMonth.parse([[name:"power", value:peakDemand]])
+                     }            
                  }
                  if (notifyWhenMonthlyDemandExceeded?.toBoolean() && peakDemand > exceededBuffer) {
                      sendNotificationMessage("New Peak Demand for ${getTheMonth()} is: ${peakDemand}W", "demandMonth")
@@ -1437,13 +1449,12 @@ def setCycleStatus() {
         runIn (1, recordFinalCyclePeaks)
         atomicState.demandCurrentWatts = atomicState.demandCurrentWatts = Math.max(getCurrentHomePowerWatts() , 0)
         atomicState.cycleDemandNotificationSent = false
-        def demandPeakCurrent = getChildDevice("demandPeakCurrent")
         if (atomicState.nowInPeakUtilityPeriod?.toBoolean()) {
             atomicState.processNewCycleThermo = true
             atomicState.thermostatToControlThisCycle = 0
         }
-        if (demandPeakCurrent) {
-            demandPeakCurrent.setPower(atomicState.demandCurrentWatts)
+        if (getChildDevice("demandPeakCurrent")) {
+            setPeakCurrentDevice ([data: [power: atomicState.demandCurrentWatts]])
         }
         secondsInThisInterval = secondsIntoThisCycle
         if (atomicState.processedDemandOnActions?.toBoolean()) {
@@ -1472,14 +1483,22 @@ def setCycleStatus() {
 def setPeakCurrentDevice(data) {
     def demandPeakCurrent = getChildDevice("demandPeakCurrent")
     if (demandPeakCurrent) {
-        demandPeakCurrent.setPower(data.power)
+        if (hubIsSt()) {
+            demandPeakCurrent.setPower(data.power)
+        } else {
+            demandPeakCurrent.parse([[name:"power", value:data.power]])
+        }
     }
 }
 
 def setPeakProjectedDevice(data) {
     def demandPeakProjected = getChildDevice("demandPeakProjected")
     if (demandPeakProjected) {
-        demandPeakProjected.setPower(data.power)
+        if (hubIsSt()) {
+            demandPeakProjected.setPower(data.power)
+        } else {
+            demandPeakProjected.parse([[name:"power", value:data.power]])
+        }
     }
 }
 
@@ -1580,7 +1599,11 @@ def recordPeakDemands() {
         atomicState.lastDay = day
         def demandPeakToday = getChildDevice("demandPeakToday")
         if (demandPeakToday) {
-            demandPeakToday.setPower(0)
+            if (hubIsSt()) {
+                demandPeakToday.setPower(0)
+            } else {
+                demandPeakToday.parse([[name:"power", value:0]])
+            }
         }
         def dashboardDevice = getChildDevice(dashboardDeviceId())
         if (dashboardDevice) {
@@ -1591,7 +1614,11 @@ def recordPeakDemands() {
         atomicState.lastMonth = month
         def demandPeakThisMonth = getChildDevice("demandPeakMonth")
         if (demandPeakThisMonth) {
-            demandPeakThisMonth.setPower(0)
+            if (hubIsSt()) {
+                demandPeakThisMonth.setPower(0)
+            } else {
+                demandPeakThisMonth.parse([[name:"power", value:0]])
+            }   
         }
         def dashboardDevice = getChildDevice(dashboardDeviceId())
         if (dashboardDevice) {
@@ -2036,6 +2063,10 @@ def getSolarPower ()
    }
    return solarPower
 }
+
+def componentRefresh(child) {
+}
+
       
 def setIndicatorDevices() {
     Boolean nowInPeakUtilityPeriod = atomicState.nowInPeakUtilityPeriod?.toBoolean()
@@ -2125,7 +2156,7 @@ def setWD200LED(led, data) {
         blink = 0
     }
     if (wD200Dimmers) {
-		wD200Dimmers.each {						
+		wD200Dimmers.each {		          
             if (it.hasCommand("setStatusLed")) {
                 it.setStatusLed(led, color, blink)
             } else if (it.hasCommand("setStatusLED")) {
