@@ -1447,7 +1447,7 @@ def setCycleStatus() {
         (atomicState.lastMinute < cycleTimeMinutes() && min >= cycleTimeMinutes())) {
         logDebug "New Demand Cycle"
         runIn (1, recordFinalCyclePeaks)
-        atomicState.demandCurrentWatts = atomicState.demandCurrentWatts = Math.max(getCurrentHomePowerWatts() , 0)
+        atomicState.demandCurrentWatts = Math.max(getCurrentHomePowerWatts() , 0)
         atomicState.cycleDemandNotificationSent = false
         if (atomicState.nowInPeakUtilityPeriod?.toBoolean()) {
             atomicState.processNewCycleThermo = true
