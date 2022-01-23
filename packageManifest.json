@@ -4,7 +4,7 @@
   "minimumHEVersion": "2.0.0",
   "dateReleased": "2022-01-20",
   "releaseNotes": "Initial Hubitat Package Manager Release",
-  "documentationLink": "https://darwinsden.com/demand/"
+  "documentationLink": "https://darwinsden.com/demand/",
   "apps": [
     {
       "id": "efdebd9f-19d9-4357-a126-a649bb2a531a",
