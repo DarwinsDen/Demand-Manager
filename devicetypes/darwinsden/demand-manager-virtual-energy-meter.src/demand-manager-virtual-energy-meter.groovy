@@ -17,16 +17,16 @@
 
 metadata {
 	definition (name: "Demand Manager Virtual Energy Meter", namespace: "darwinsden", author: "darwin@darwinsden.com") {
-    capability "Energy Meter"
-    capability "Power Meter"
-    capability "Polling"
-    capability "Refresh"
-    capability "Sensor"
-    command "reset"	
-    command "setPower"
-    command "setEnergy"
-    command "setDemandGoal"
-  }
+		capability "Energy Meter"
+		capability "Power Meter"
+		capability "Polling"
+		capability "Refresh"
+		capability "Sensor"
+		command "reset"	
+        command "setPower"
+        command "setEnergy"
+        command "setDemandGoal"
+    }
     
 	simulator {
 	}

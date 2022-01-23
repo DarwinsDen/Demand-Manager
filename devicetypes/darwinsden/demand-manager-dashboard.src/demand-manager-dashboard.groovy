@@ -1,5 +1,5 @@
 /**
- *  Demand Manager Dashboard
+ *  Demand Manager Dashboard  
  *
  *  Author: Darwin@DarwinsDen.com
  *  Copyright 2018-2022 - All rights reserved
@@ -12,14 +12,18 @@
  * 
  *  The developer retains all rights, title, copyright, and interest, including all copyright, patent rights, and trade secrets 
  *  associated with the algorthms, and technologies used herein. 
+ *
+ *	11-Jan-2020 >>> v0.1.2e.20200111 - Added attributes for current and projected demand
+ *	10-Jan-2020 >>> v0.1.1e.20200110 - Updated for Hubitat compatibility
  * 
  */
 metadata {
         definition (name: "Demand Manager Dashboard", namespace: "darwinsden", author: "darwin@darwinsden.com") {
         capability "Switch"
-        capability "Refresh"  
+        capability "Refresh"
         capability "Energy Meter"
         capability "Power Meter"
+       
         command "setCurrentDemand"
         command "setProjectedDemand"
         command "setMode"
@@ -259,3 +263,7 @@ def evaluateGoal() {
      state.lastEnergySendTime = now()
   }
   */
+  
+
+
+
