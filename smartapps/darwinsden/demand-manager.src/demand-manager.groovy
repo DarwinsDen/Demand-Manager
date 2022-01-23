@@ -1454,7 +1454,7 @@ def setCycleStatus() {
             atomicState.thermostatToControlThisCycle = 0
         }
         if (getChildDevice("demandPeakCurrent")) {
-            setPeakCurrentDevice ([data: [power: atomicState.demandCurrentWatts]])
+            setPeakCurrentDevice ([power: atomicState.demandCurrentWatts])
         }
         secondsInThisInterval = secondsIntoThisCycle
         if (atomicState.processedDemandOnActions?.toBoolean()) {
