@@ -27,7 +27,7 @@
       "namespace": "darwinsden",
       "location": "https://raw.githubusercontent.com/DarwinsDen/Demand-Manager/master/devicetypes/darwinsden/demand-manager-dashboard.src/demand-manager-dashboard.groovy",
       "required": true,
-      "version": "0.3.40"
+      "version": "0.1.20"
     }
   ]
 }
