@@ -1394,8 +1394,7 @@ def recordFinalCyclePeaks () {
                 logDebug("setting today's peak demand")
                 dashboardDevice.setPeakDayDemand(peakDemand)
                 def demandPeakToday = getChildDevice("demandPeakToday")
-                if (demandPeakToday) {
-                    demandPeakToday.setPower(peakDemand)                  
+                if (demandPeakToday) {              
                     if (hubIsSt()) {
                         demandPeakToday.setPower(peakDemand)
                     } else {
